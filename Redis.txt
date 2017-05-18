@@ -1,0 +1,482 @@
+Redis是什么:
+Redis is an open source (BSD licensed), in-memory data structure store, used as database, cache and message broker.
+It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries.
+Redis是一个开源的项目(BSD许可)，在内存中的型数据结构存储，被用作数据库、缓存和消息代理
+它支持的数据结构有 字符串 哈希 链表 集合 有序集合
+
+sftp -P 1060 xtrdtek@ip
+ifconfig
+get获取文件，put是上传文件
+
+sudo ufw status
+sudo ufw allow
+
+redis和memcached相比，其独特之处：
+1、redis可以用来做存储，而memcached是用来做缓存，这个特点主要是因为：其有持久化功能，
+2、存储的数据有结构，对于memcached来说，存储的数据，只有1类类型--“字符串”
+   而redis则可以存储字符串，链表，哈希结构，集合，有序集合。
+下载和安装Redis
+	1、下载redis wget redis下载网址
+	2、解压redis tar zxvf redis-3.2.0.tar.gz
+	3、直接make
+	  注：易碰到的问题。时间错误。
+	  原因：源码是官方configure过得，但官方configur时，生成的文件有时间戳信息
+	  make只能发生在configure之后，
+	  如果你的虚拟机的时间不对，比如说是2012年，
+	  解决：data -s 'yyyy-mm-dd hh:mm:ss'重写时间
+		再clock -w 写入cmos
+	4、可选步骤：make test 测试编译情况
+	   (可能出现need tcl >8.4这种情况，yum install tcl)
+	6、安装到指定的目录，比如/usr/local/redis
+	   make PREFIX = /usr/local/redis install
+	   注：PREFIX要大写
+	   redis-benchmark 性能测试工具
+	   redis-check-aof 日志文件检测工具(比如断电后造成日志损坏，可以检测修复)
+	   redis-check-dump 快照文件检测工具，效果类上
+	   redis-cli 客户端
+	   redis-server 服务端
+	7、启动redis服务
+	   ./bin/redis-server ./redis.conf 
+	8、后台运行redis服务，
+	   vi redis.conf文件，daemonize yes
+Redis通用命令
+1、查询
+   keys pattern 查询相应的key
+   在redis里，允许模糊查询key
+   有3个通配符* ? []
+   * 通配任意多个字符
+   ? 通配单个字符
+   []通配括号内的某1个字符
+2、返回随机key
+   random key
+3、返回key存储的值的类型
+   type key 
+4、判断某个key是否存在
+   exists key 1|0
+5、删除key
+   del key 1|0
+6、更新
+   rename key newkey 
+   如果newkey已经存在，则newkey会被覆盖
+   如果key不存在，则会报错 (error) ERR no such key
+   renamenx key newkey
+   如果newkey不存在，则修改
+   如果newkey存在，则不修改
+   如果key不存在，则或报错 (error) ERR no such key
+7、移动
+   move key index
+8、查看key值有效期
+   ttl key  -1永久有效
+   redis2.8以后 对于不存在的key 也返回-2
+   如果存在，返回秒数
+9、expire key 整形值 设置有效期
+   设置key的生命周期
+   同理：pexpire key 毫秒值 设置生命周期
+   pttl key 以毫秒返回生命周期
+10、设置永久有效
+   persist key
+
+
+Redis字符串类型的操作
+1、set key value [ex 秒数]|[px 毫秒数][nx]/[xx]
+   set a 1 ex 10 10秒有效
+   set a a px 9000 9秒有效
+   注意：ex，px不要同时写，否则会出现错误 (error) ERR syntax error
+   nx not exist不存在时才增加
+   xx 存在时才增加
+2、mset 一次性设置多个键值
+   mset key1 value1 key2 value2....
+3、get key
+   作用获取key值
+   mget
+4、setrange key offset value
+   把字符串的offset偏移字节，改成value
+   setranges word 2 ??
+   he??o
+   注意：如果偏移量大于字符长度，该字符自动补0x00
+5、append key value
+   在原有的key的value上追加字符串
+   如果key不存在，则效果同set
+6、获取value的一部分
+   getrange key start stop
+   前后包含，从0开始
+   注意：1、如果start >= length ，则返回空字符串
+         2、如果stop >= length，则截取至字符结尾
+	 3、如果start所处位置在stop右边，返回空字符串
+7、getset key newvalue
+   获取旧值，设置新值
+8、incr key 加一 incrby key number 加number
+   decr key 减一 decrby key number 减number
+9、getbit key offset
+   作用：获取值得二进制标识，对应位上的值(从左，从0编号)
+10、setbit offset value
+   作用：将相关二进制偏移位修改
+   返回该位上的原值
+   setbit char 2 1,大写变小写
+   setbit char 2 0,小写变大写
+   注意：
+   1、如果offset过大，则会在中间填充0
+   2、offset最大到多少 2^32-1,可推出最大的字符串为521M
+11、bitop operation destkey key1 key2
+   对key1，key2，keyN做operation，并将结果保存到destkey
+   operation可以是AND OR NOT XOR
+   注意：对于NOT操作，key不能多个
+
+LINK链表结构
+1、插入 lpush 从左边插入
+	rpush 从右边插入
+2、lrange key start stop
+   查看所有 lrange key 0 -1
+3、弹出
+   lpop key 左弹出 rpop 右弹出
+4、lrem key count value
+   作用：从key链表中删除value值
+   注：删除count的绝对值个value后结束
+   count >0 从表头开始删除
+   count <0 从表尾开始删除
+5、ltrim key start stop
+   剪切key对应的链接，切start ，stop一段，并把该段重新赋给key
+6、返回index索引上的值
+   index key 2
+7、返回链表长度
+   llen character
+8、插入
+   insert key after/before search value
+   作用：在key链表中寻找'search',并在search值之前/之后，插入value
+   注：一旦找到一个search后，命令就结束了，因此不会插入多个value
+   如果最终都没找到search，命令就不会执行
+9、rpoplpush source dest
+   作用：把source的尾部拿出，放在dest的头部
+   并返回该单元值
+   场景：task + back双链表完成安全队列
+   业务逻辑：
+   1、rpoplpush task bak
+   2、接收返回值，做业务处理
+   3、如果成功，lpop back 清除任务，如不成功，下次从bak表里取任务
+10、brpop blpop timeout
+   作用：等待弹出key的尾/头元素
+   timeout为等待超时时间
+   如果timeout为0则一直等待
+位图法记录用户活跃度
+127.0.0.1:6379> set bit mon 3 1
+(error) ERR syntax error
+127.0.0.1:6379> setbit mon 3 1
+(integer) 0
+127.0.0.1:6379> set bit mon 5 1
+(error) ERR syntax error
+127.0.0.1:6379> setbit mon 5 1
+(integer) 0
+127.0.0.1:6379> setbit mon 7 1
+(integer) 0
+127.0.0.1:6379> setbit thur 100000000 0
+(integer) 0
+127.0.0.1:6379> setbit thur 3 1
+(integer) 0
+127.0.0.1:6379> setbit thur 5 1
+(integer) 0
+127.0.0.1:6379> setbit thur 8 1
+(integer) 0
+127.0.0.1:6379> setbit wen 100000000 0
+(integer) 0
+127.0.0.1:6379> 
+127.0.0.1:6379> setbit wen 3 1
+(integer) 0
+127.0.0.1:6379> setbit wen 4 1
+(integer) 0
+127.0.0.1:6379> setbit wne 6 1
+(integer) 0
+127.0.0.1:6379> bitop and res mon thur wen
+(integer) 12500001
+127.0.0.1:6379> 
+
+set结构及命令详解
+1、无序性 
+2、唯一性 集合中的每个值都是唯一的，不可重复
+3、确定性 
+
+1、sadd key value1 value2
+   往集合key中增加元素
+2、smembers key
+   返回集合中的所有元素
+3、srem key value
+   删除集合中的某个值
+4、spop key
+   作用：返回并删除集合key中的1个随机元素
+   随机体现了无序性
+5、srandmember key
+   作用：随机返回集合中的值
+6、sismember key value
+   作用：判断value是否在key的集合中
+   是返回1否返回0
+7、scard key
+   作用：返回集合中元素的个数
+8、smove source dest value
+   作用：把source中的value删除，并添加到dest集合中来
+9、求交集
+   sinter key1 key2 key3...
+   求key1 key2 key3...集合的交集
+10、求并集
+   sunion key1 key2 key3 ...
+11、求差集
+   sdiff key1 key2
+   求key1 - key2的集合
+12、sinterstore dest key1 key2 key3
+   求交集并保存在dest集合中
+
+   order set 有序集合
+1、zadd key score1 value1 score2 value2 score3 value3.....
+   添加元素
+2、zrange key start stop [withscores]
+   把集合排序后，返回名字[start,stop]之间的元素
+   默认是升序排列
+   withscore是把score也打印出来
+3、zrangebyscore key min max [withscores] limit offset count
+   作用：集合升序排序后，取score在[min,max]之间的元素
+   并跳过offset个，去除N个
+   有序集合可以实现分页
+4、zrank key member
+   查询member的排名(升序0名开始)
+5、zrevrank key member
+   查询member的排名(降续0名开始)
+6、zremrangebyscore key min max
+   作用：按照score来删除元素，删除score在[min,max]之间的
+7、zremrangebyrank key min max
+   作用：按照rank来删除元素，删除rank在[min,max]之间的
+8、zrem class key1 key2 key3
+   作用：按照vlaue来删除元素
+9、zcard key
+   作用：返回元素个数
+10、zcount key min max
+   作用：在[min,max]中的元素个数
+11、zinterstore destination numkeys key1 [key2]
+    [WEIGHTS weight[weight]]
+    [AGGREGATE SUM|MIN|NAX]
+    求key1，key2的交集，key1，key2的权重为weight1，weight2
+    聚合方法用：sum|min|max
+    聚合的结果，保存在destination集合内
+    注意：weights，aggregate如何理解
+    答：如果有交集，交集元素score1，score2怎么处理
+    Aggregate sum ->score相加，min求最小score，max求最大score
+    另：可以通过weight设置不同key的权重，交集时，score*weights
+    Hash结构及命令详解
+1、hset key field value
+   作用：把key中的field的值设为value
+   注意：如果没有field域，直接添加，则覆盖原field域的值
+2、hgetall key
+   作用：返回key中，所有域与其值
+3、hmset key field1 value1[field2 value2 field3 vlaue3 ...fieldn vlauen]
+   作用：设置field->n,对应的值是value1->n
+4、hget key field
+   作用：返回key中的field域的值
+5、hmget key field1 field2 ... fieldn
+   作用：返回key中的field1 field2... fieldn域的值
+6、hgetall key
+   作用：返回key中，所有域与其值
+7、hdel key field
+   作用：删除key中filed域
+8、hlen key
+   作用：返回key中的field的数量
+9、hexists key filed
+   作用：判断key中的filed是否存在
+10、hincrby key field num
+   作用：key中的filed域的值增加整形num
+11、hincrbyfloat key filed num
+   作用：key中的field域的值增加浮点型num
+12、hkeys key
+   作用：返回key中所有的field
+13、hvalues key
+   作用：返回key中的所有的value
+   Redis中的事务
+   redis支持简单的事务
+   redis与mysql事务的对比
+
+	mysql                          redis
+   开启 start transaction             muitl
+   语句 普通sql			    普通命令
+   失败 rollback		    discard 取消
+   成功 commit			    exec
+
+
+   注：rollback与mysql事务的区别
+   如果已经成功执行了2条语句，第三条语句出错
+   rollback后，前两条语句影响消失
+   discard只是结束本次事务，前两条语句造成的影响仍然还在
+
+   注：
+   在multi后的语句中，语句出错的情况可能有两种
+   1、语法就有问题
+   这种exec时，报错，所有语句都不得执行
+   2、语法本身没错，但适用对象有问题，比如zadd操作list对象
+   exec之后，会执行正确的语句，并跳过不适当的语句
+   （如果zadd操作list这种事怎么避免？这一点，由程序员负责）
+14、watch key1 key2 key3...keyn 
+    作用：监听key1 key2 key3...keyn有没有变化，如果任意一个变化，则事务取消
+    unwatch
+
+
+    redis消息发布订阅
+    发布消息：
+    publish channel message 发布消息
+    订阅消息：
+    subscribe channel... 监听频道
+    psubscribe channel pattrern 通配符监听
+    查看当前活跃的频道列表
+    pubsub channels [pattern] lists the currently active channels
+
+
+    6.1 持久化的方式
+	持久化：即把数据存储于断电后不会丢失的设备中，通常是硬盘
+	常见的持久化方式：
+	主从：通过从服务器保存和持久化，如mongodb的replication sets配置
+	日志：操作生成相关日志，并通过日志来恢复数据
+	couchDB对于数据内容不修改，只追加，则文件本身就是日志，不会丢失数据
+
+    6.2 redis-之rdb快照持久化
+    rdb工作原理：
+    每隔N分钟或N次写操作后，从内存dump数据形成rdb文件，压缩，放在备份目录
+    注：红色部分可通过参数来配置
+
+    6.3 rdb相关配置参数
+        save 900 1 #刷新快照到硬盘中，必须满足两者的要求才会触发，即900秒之后，至少1个关键字发生变化
+	save 300 10 #必须是300秒之后，至少10个关键字发生变化
+	save 60 10000 #必须是60秒之后，至少10000个关键字发生变化
+	(如果这3个选项都屏蔽，则RDB禁用)
+	stop-writes-on-bgsave-error yes #后台存储出错，停止写
+	rdbcompression yes #使用LZF压缩rdb文件
+	redbchecksum yes #存储和加载rdb问件事校验
+	dbfilename dump.rdb #设置rdb文件名
+	dir ./ #设置工作目录，rdb文件会写入该目录
+    6.4 rdb的缺陷
+       在2个保存点之间，断电，
+       将会丢失1-N分钟的数据，
+       处于对持久化更精细要求，
+       redis增添了aof方式，append only file
+
+    6.5 aof的原理
+    6.6 aof的配置
+	appendonly no #是否打开 aof日志功能
+	appendfsync always #每一个命令，都立即同步到aof 安全速度慢
+	appendfsync everysec # 折衷方案，每秒写1次
+	appendfsync no # 写入工作交给操作系统，由操作系统判断缓冲区大小，统一写入aof
+	同步频率低，速度快
+
+	no-appendfsync-on-rewrite yes #正在到处rdb快照的过程中，要不要停止同步aof
+	auto-aof-rewrite-percentage 100 #aof文件大小比上次重写时的大小，增长率100%时，重写
+	auto-aof-rewrite-min-size 64mb #aof文件，至少超过64M时，重写
+
+	问：两种是否可以同时用
+	答：可以，而且推荐这么用
+
+	问：恢复时rdb和aof哪个恢复的快
+	答：rdb快，因为其实数据的内存映射，直接载入内存，而aof是命令，需要逐条执行
+
+	问：如果rdb文件和aof文件都存在，优先使用谁来恢复数据
+	答：aof
+
+    7.1 集群的作用
+	1、主从备份，防止主机宕机
+	2、读写分离，分担master的任务
+	3、任务分离，如从服分别分担备份工作与计算工作
+    7.2 redis集群
+        1、星型集群
+	2、线性集群
+	第二种方式的好处，master宕机后，可以直接切换到slave1
+    7.3 主从通信过程
+        1、slave向master发出同步请求，
+	2、master服务器dump出当时的rdb快照给slave，在dump期间的变化缓冲成aof
+	3、slave同步完rdb快照后，同步aof队列
+	4、master以后所有变化都通过replicationFeedSlaves与slave同步
+    7.4 redis集群配置
+        修改从服务器的配置文件redis6381.conf
+	1、修改pidfile文件，各自使用各自的pid文件,修改端口号port参数
+	2、从服务器开启rdb快照
+	3、修改slaveof masterIp masterport 修改slave-read-only yes
+	修改从服务器的配置文件redis6382.conf
+	1、修改pidfile文件，修改端口号
+	2、从服务器关闭rdb快照
+	3、关闭aof日志
+	4、打开slave of masterIP masterip
+	master配置
+	1、关闭rdb快照(备份工作交给slave)
+	2、可以开启aof
+	slave配置
+	1、声明slave-of
+	2、配置密码[如果master有密码]
+	3、[某一个]slave打开rdb快照
+	4、配置是否只读[slave-read-only]
+	7.5 redis主从复制的缺陷
+	缺陷 ：
+	每次slave断开后，再连接master，
+	都要master全部dump出来rdb，再aof
+	即同步的过程都需要重新执行1遍
+	所以，多台slave不要一下都启动起来，否则，master可能IO剧增
+    7.5 运维常用的server端配置
+	1、time 显示服务器时间，时间戳(秒)，微秒数
+	2、dbsize 查看当前数据库的key的数量
+	3、bgrewriteaof 后台进程立即重写aof日志
+	4、bgsave 后台保存rdb快照
+	5、save 保存rdb快照
+	6、lastsave 查看上次保存时间
+	7、flushdb 清空当前库所有键
+	8、flushall 清空所有库所有键
+	注意：如果不小心运行了flushall，立即shutdown nosave
+	9、info 服务器统计信息
+	   #Memory
+	   used_memory:825504 数据结构的空间
+	   used_memory_rss:1212416 实站空间
+	   mem_fragmentation_ratio:1.47 前2者的比例，1.N最佳，如果此值过大，
+			说明redis的内存的碎片化严重，可以导出再导入一次
+	   #Replication
+	   role :slave
+	   master_host:192.168.1.128'
+	   master_port:6379
+	   master_link_status:up
+
+	   #Persistence
+	   rdb_changes_since_last_save:10
+	   rdb_last_save_time:1470210964
+
+	   #Status
+	   lastest_fork_usec:936 上次导出rdb，持久化花费的微秒
+	    注意：如果某实例有10G内容，导出需要2分钟
+	    每分钟写入10000次，导致不断的rdb导出，磁盘处于高IO状态
+	10、config get/set
+	   慢日志：
+	   Slowlog显示慢查询
+	   注：多慢才叫慢
+	   答：由slowlog-log-slower-than 10000 来制定，单位是微秒
+	   服务器存储多少条慢查询记录？
+	   答：由slow-max-len 128来限制
+	   查看慢查询日志
+	   slowlog get
+	11、服务器关闭
+	   shutdown (save/nosave)
+8.1	rdb aof迁移
+	当不小心写了flushdb 或者flushall
+	立即运行shutdown nosave,
+	然后修改aof文件，恢复到flushall之前，然后启动server即可
+
+	在redis进程运行时，rdb文件处于打开状态，直接复制rdb文件，会占用相同的句柄，所以复制的rdb文件是有问题的
+9.1 运行时更改master-slave
+
+    修改一台slave(设为A)为master
+    1)命令该服务不做其它redis的slave
+      slaveof no one
+    2)运行时修改其readonly为yes
+
+    其它的slave再指向new master A
+    1)命令该服务为new master A 的slave
+      slaveof ip port
+
+
+10.1  Redis key 设计技巧
+     1、把表名转换为key的前缀 如tag:
+     2、第2段放置用于区分key的字段--对应mysql中的主键的列名，如userid
+     3、第3段放置表的主键值或unique列，如userid,tag的content
+     4、第4段，要存储的列名
+
+     set user:userid:9:username lisi
+     set user:userid:9:password 1111
+     set user:userid:9:email lisi@163.com
+
+     keys user:userid:9*
