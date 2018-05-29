@@ -1,0 +1,25 @@
+1.Spring通过HandlerExceptionResovler处理异常,
+  包括Handler映射,数据绑定,以及目标方法执行时发生的异常
+2.SpringMVC提供的HandlerExceptionResovler的实现类
+  1.HandlerExceptionResolverComposite
+  2.AbstractHandlerExceptionResolver
+    2.1 SimpleMappingExceptionResolver
+    2.2 AnnotationMethodHandlerExceptionResolver
+    2.3 DefaultHandlerExceptionResolver
+    2.4 ResponseStatusExceptionResolver
+    2.5 AbstractHandlerMethodExceptionResolver
+        2.5.1 ExceptionHandlerExceptionResolver
+3.DispatcherServlet默认装配的HandlerExceptionResovler
+  3.1在没有使用<mvc:annotation-driven/>配置
+     AnnotationMethodHandlerExceptionResolver
+     ResponseStatusExceptionResolver
+     DefaultHandlerExceptionResolver
+  3.2在使用了<mvc:annotation-driven/>配置
+     ExceptionHandlerExceptionResolver
+     ResponseStatusExceptionResolver
+     DefaultHandlerExceptionResolver
+4.ExceptionHandler注解
+  4.1 在@ExceptionHandler方法的入参中可以加入Exception类型的参数,该参数即对应发生的异常对象
+  4.2 在@ExceptionHandler方法的入参中不能加入Map,若希望把异常信息传到页面上,需要使用ModelAndView作为返回值
+  4.3 在@ExceptionHandler方法标记的异常有优先级问题
+5.
