@@ -1,6 +1,6 @@
-1.SpringÍ¨¹ıHandlerExceptionResovler´¦ÀíÒì³£,
-  °üÀ¨HandlerÓ³Éä,Êı¾İ°ó¶¨,ÒÔ¼°Ä¿±ê·½·¨Ö´ĞĞÊ±·¢ÉúµÄÒì³£
-2.SpringMVCÌá¹©µÄHandlerExceptionResovlerµÄÊµÏÖÀà
+1.Springé€šè¿‡HandlerExceptionResovlerå¤„ç†å¼‚å¸¸,
+  åŒ…æ‹¬Handleræ˜ å°„,æ•°æ®ç»‘å®š,ä»¥åŠç›®æ ‡æ–¹æ³•æ‰§è¡Œæ—¶å‘ç”Ÿçš„å¼‚å¸¸
+2.SpringMVCæä¾›çš„HandlerExceptionResovlerçš„å®ç°ç±»
   1.HandlerExceptionResolverComposite
   2.AbstractHandlerExceptionResolver
     2.1 SimpleMappingExceptionResolver
@@ -9,17 +9,17 @@
     2.4 ResponseStatusExceptionResolver
     2.5 AbstractHandlerMethodExceptionResolver
         2.5.1 ExceptionHandlerExceptionResolver
-3.DispatcherServletÄ¬ÈÏ×°ÅäµÄHandlerExceptionResovler
-  3.1ÔÚÃ»ÓĞÊ¹ÓÃ<mvc:annotation-driven/>ÅäÖÃ
+3.DispatcherServleté»˜è®¤è£…é…çš„HandlerExceptionResovler
+  3.1åœ¨æ²¡æœ‰ä½¿ç”¨<mvc:annotation-driven/>é…ç½®
      AnnotationMethodHandlerExceptionResolver
      ResponseStatusExceptionResolver
      DefaultHandlerExceptionResolver
-  3.2ÔÚÊ¹ÓÃÁË<mvc:annotation-driven/>ÅäÖÃ
+  3.2åœ¨ä½¿ç”¨äº†<mvc:annotation-driven/>é…ç½®
      ExceptionHandlerExceptionResolver
      ResponseStatusExceptionResolver
      DefaultHandlerExceptionResolver
-4.ExceptionHandler×¢½â
-  4.1 ÔÚ@ExceptionHandler·½·¨µÄÈë²ÎÖĞ¿ÉÒÔ¼ÓÈëExceptionÀàĞÍµÄ²ÎÊı,¸Ã²ÎÊı¼´¶ÔÓ¦·¢ÉúµÄÒì³£¶ÔÏó
-  4.2 ÔÚ@ExceptionHandler·½·¨µÄÈë²ÎÖĞ²»ÄÜ¼ÓÈëMap,ÈôÏ£Íû°ÑÒì³£ĞÅÏ¢´«µ½Ò³ÃæÉÏ,ĞèÒªÊ¹ÓÃModelAndView×÷Îª·µ»ØÖµ
-  4.3 ÔÚ@ExceptionHandler·½·¨±ê¼ÇµÄÒì³£ÓĞÓÅÏÈ¼¶ÎÊÌâ
+4.ExceptionHandleræ³¨è§£
+  4.1 åœ¨@ExceptionHandleræ–¹æ³•çš„å…¥å‚ä¸­å¯ä»¥åŠ å…¥Exceptionç±»å‹çš„å‚æ•°,è¯¥å‚æ•°å³å¯¹åº”å‘ç”Ÿçš„å¼‚å¸¸å¯¹è±¡
+  4.2 åœ¨@ExceptionHandleræ–¹æ³•çš„å…¥å‚ä¸­ä¸èƒ½åŠ å…¥Map,è‹¥å¸Œæœ›æŠŠå¼‚å¸¸ä¿¡æ¯ä¼ åˆ°é¡µé¢ä¸Š,éœ€è¦ä½¿ç”¨ModelAndViewä½œä¸ºè¿”å›å€¼
+  4.3 åœ¨@ExceptionHandleræ–¹æ³•æ ‡è®°çš„å¼‚å¸¸æœ‰ä¼˜å…ˆçº§é—®é¢˜
 5.

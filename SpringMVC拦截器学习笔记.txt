@@ -1,27 +1,27 @@
-1.´´½¨Ò»¸öÀà,ÊµÏÖHandlerInterceptor½Ó¿Ú,
+1.åˆ›å»ºä¸€ä¸ªç±»,å®žçŽ°HandlerInterceptoræŽ¥å£,
   public class FirstInterceptor implements HandlerInterceptor
-2.ÔÚmvcÅäÖÃÎÄ¼þÖÐ,ÅäÖÃÀ¹½ØÆ÷Á´
+2.åœ¨mvcé…ç½®æ–‡ä»¶ä¸­,é…ç½®æ‹¦æˆªå™¨é“¾
   <mvc:interceptors>
 	<bean class="com.test.springmvc.interceptor.FirstInterceptor"/>
   </mvc:interceptors>
-3.¸÷¸ö·½·¨µÄµ÷ÓÃË³Ðò
-  (1)preHandle·½·¨
-  ¸Ã·½·¨ÔÚÄ¿±ê·½·¨Ö®Ç°±»µ÷ÓÃ
-  Èô·µ»Øtrue,Ôò¼ÌÐøµ÷ÓÃºóÐøµÄÀ¹½ØÆ÷ºÍÄ¿±ê·½·¨
-  Èô·µ»Øfalse,Ôò²»»áÔÙµ÷ÓÃºóÐøµÄÀ¹½ØÆ÷ºÍÄ¿±ê·½·¨
-  ÓÃ´¦:¿ÉÒÔ¿¼ÂÇ×öÈ¨ÏÞ,ÈÕÖ¾,ÊÂÎñµÈ
-  (2)postHandle·½·¨
-  µ±preHandle·½·¨·µ»ØtrueµÄÇé¿öÏÂ,²Å»áÖ´ÐÐpostHandle·½·¨
-  µ÷ÓÃÄ¿±ê·½·¨Ö®ºó,µ«ÔÚäÖÈ¾·½·¨Ö®Ç°±»µ÷ÓÃ
-  ÓÃ´¦:¿ÉÒÔ¶ÔÇëÇóÓòÖÐµÄÊôÐÔ»òÊÓÍ¼×ö³öÐÞ¸Ä
-  (3)afterCompletion·½·¨
-  äÖÈ¾ÊÓÍ¼Ö®ºó±»µ÷ÓÃ
-  ÓÃ´¦,ÊÍ·Å×ÊÔ´
-4.¶à¸öÀ¹½ØÆ÷Ö®¼äµÄµ÷ÓÃË³Ðò
-  preHandle·½·¨°´Ë³ÐòÖ´ÐÐ,
-  postHandle·½·¨°´µ¹ÐòÖ´ÐÐ,
-  afterCompletion°´µ¹ÐòÖ´ÐÐ
-  ´ÓÔ´ÂëµÄ½Ç¶È¿´,ÔÚÖ´ÐÐpreHandle·½·¨Ê±,forÑ­»·ÊÇ´Ó-1µ½×îºóÖ´ÐÐµÄ,
-  ÔÚÖ´ÐÐpostHandle·½·¨Ê±,ÊÇ´Óµ±Ç°À¹½ØÆ÷ÐòºÅµ½0Ö´ÐÐ,
-  ÔÚÖ´ÐÐafterCompletion·½·¨Ê±,ÊÇ´Óµ±Ç°À¹½ØÆ÷ÐòºÅµ½0Ö´ÐÐ,
-  ËùÒÔ²ÅÓÐÕâÑùµÄÀ¹½ØÆ÷Ë³Ðò
+3.å„ä¸ªæ–¹æ³•çš„è°ƒç”¨é¡ºåº
+  (1)preHandleæ–¹æ³•
+  è¯¥æ–¹æ³•åœ¨ç›®æ ‡æ–¹æ³•ä¹‹å‰è¢«è°ƒç”¨
+  è‹¥è¿”å›žtrue,åˆ™ç»§ç»­è°ƒç”¨åŽç»­çš„æ‹¦æˆªå™¨å’Œç›®æ ‡æ–¹æ³•
+  è‹¥è¿”å›žfalse,åˆ™ä¸ä¼šå†è°ƒç”¨åŽç»­çš„æ‹¦æˆªå™¨å’Œç›®æ ‡æ–¹æ³•
+  ç”¨å¤„:å¯ä»¥è€ƒè™‘åšæƒé™,æ—¥å¿—,äº‹åŠ¡ç­‰
+  (2)postHandleæ–¹æ³•
+  å½“preHandleæ–¹æ³•è¿”å›žtrueçš„æƒ…å†µä¸‹,æ‰ä¼šæ‰§è¡ŒpostHandleæ–¹æ³•
+  è°ƒç”¨ç›®æ ‡æ–¹æ³•ä¹‹åŽ,ä½†åœ¨æ¸²æŸ“æ–¹æ³•ä¹‹å‰è¢«è°ƒç”¨
+  ç”¨å¤„:å¯ä»¥å¯¹è¯·æ±‚åŸŸä¸­çš„å±žæ€§æˆ–è§†å›¾åšå‡ºä¿®æ”¹
+  (3)afterCompletionæ–¹æ³•
+  æ¸²æŸ“è§†å›¾ä¹‹åŽè¢«è°ƒç”¨
+  ç”¨å¤„,é‡Šæ”¾èµ„æº
+4.å¤šä¸ªæ‹¦æˆªå™¨ä¹‹é—´çš„è°ƒç”¨é¡ºåº
+  preHandleæ–¹æ³•æŒ‰é¡ºåºæ‰§è¡Œ,
+  postHandleæ–¹æ³•æŒ‰å€’åºæ‰§è¡Œ,
+  afterCompletionæŒ‰å€’åºæ‰§è¡Œ
+  ä»Žæºç çš„è§’åº¦çœ‹,åœ¨æ‰§è¡ŒpreHandleæ–¹æ³•æ—¶,forå¾ªçŽ¯æ˜¯ä»Ž-1åˆ°æœ€åŽæ‰§è¡Œçš„,
+  åœ¨æ‰§è¡ŒpostHandleæ–¹æ³•æ—¶,æ˜¯ä»Žå½“å‰æ‹¦æˆªå™¨åºå·åˆ°0æ‰§è¡Œ,
+  åœ¨æ‰§è¡ŒafterCompletionæ–¹æ³•æ—¶,æ˜¯ä»Žå½“å‰æ‹¦æˆªå™¨åºå·åˆ°0æ‰§è¡Œ,
+  æ‰€ä»¥æ‰æœ‰è¿™æ ·çš„æ‹¦æˆªå™¨é¡ºåº

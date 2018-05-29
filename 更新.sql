@@ -1,0 +1,12 @@
+SELECT a.`rep_code` FROM request_data AS a WHERE a.`req_param` LIKE '%busBasedata%' AND a.`service_model` = 'createOrder';
+SELECT * FROM insure_order AS a LEFT JOIN request_data AS b ON a.`udrRespNo` = b.`rep_code`  WHERE b.`req_param` LIKE '%busBasedata%' AND b.`service_model` = 'createOrder';
+UPDATE business_base_branch_data AS a SET a.`salesManName` =TRIM(TRAILING '\r\n' FROM a.`salesManName`);
+UPDATE business_base_branch_data AS a SET a.`agentName` =TRIM(TRAILING '\r\n' FROM a.`agentName`);
+UPDATE business_base_branch_data AS a SET a.`salesManCode` =TRIM(TRAILING '\r\n' FROM a.`salesManCode`);
+UPDATE business_base_branch_data AS a SET a.`departmentName` =TRIM(TRAILING '\r\n' FROM a.`departmentName`);
+UPDATE business_base_branch_data AS a SET a.`countyFlag` =TRIM(TRAILING '\r\n' FROM a.`countyFlag`);
+UPDATE business_base_branch_data AS a SET a.`operaterName` =TRIM(TRAILING '\r\n' FROM a.`operaterName`);
+UPDATE business_base_branch_data AS a SET a.`departmentCode` = TRIM(TRAILING '\r\n' FROM a.`departmentCode`);
+UPDATE business_base_branch_data AS a SET a.`agentCode` = TRIM(TRAILING '\r\n' FROM a.`agentCode`);
+UPDATE business_base_branch_data AS a SET a.`agencyAgreementCode` = TRIM(TRAILING '\r\n' FROM a.`agencyAgreementCode`);
+UPDATE business_base_branch_data AS a SET a.`operaterCode` = TRIM(TRAILING '\r\n' FROM a.`operaterCode`);
